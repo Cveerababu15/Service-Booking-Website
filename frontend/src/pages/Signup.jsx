@@ -16,16 +16,12 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      const res = await signup(form);
-      if (res.user) {
-        toast.success("Account created successfully! Please login.");
-        navigate("/login");
-      } else {
-        toast.error(res.message || "Registration failed");
-      }
+      await signup(form);
+      toast.success("Account created successfully! Please login.");
+      navigate("/login");
     } catch (err) {
       console.error(err);
-      toast.error("Registration error. Try again.");
+      toast.error(err.message || "Registration error. Try again.");
     } finally {
       setLoading(false);
     }

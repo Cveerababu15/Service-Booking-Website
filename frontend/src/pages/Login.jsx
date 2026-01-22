@@ -14,19 +14,15 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await login({ email, password });
-      if (res.token) {
-        localStorage.setItem("token", res.token);
-        const userData = JSON.parse(atob(res.token.split(".")[1]));
-        localStorage.setItem("role", userData.role);
-        window.dispatchEvent(new Event("authChange"));
-        toast.success(`Welcome back, ${userData.name || 'User'}!`);
-        navigate(userData.role === "admin" ? "/admin" : "/dashboard");
-      } else {
-        toast.error(res.message || "Invalid credentials");
-      }
+      localStorage.setItem("token", res.token);
+      const userData = JSON.parse(atob(res.token.split(".")[1]));
+      localStorage.setItem("role", userData.role);
+      window.dispatchEvent(new Event("authChange"));
+      toast.success(`Welcome back, ${userData.name || 'User'}!`);
+      navigate(userData.role === "admin" ? "/admin" : "/dashboard");
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(err.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

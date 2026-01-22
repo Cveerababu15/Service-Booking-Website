@@ -1,23 +1,31 @@
-const API = "http://localhost:4000/api";
+const API = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+
+const handleResponse = async (res) => {
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+  return data;
+};
 
 export const signup = (data) =>
   fetch(`${API}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const login = (data) =>
   fetch(`${API}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const getServices = (token) =>
   fetch(`${API}/services`, {
     headers: { Authorization: `Bearer ${token}` }
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const createService = (data, token) =>
   fetch(`${API}/services`, {
@@ -27,7 +35,7 @@ export const createService = (data, token) =>
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(data)
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const createBooking = (data, token) =>
   fetch(`${API}/bookings`, {
@@ -37,17 +45,17 @@ export const createBooking = (data, token) =>
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(data)
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const getMyBookings = (token) =>
   fetch(`${API}/bookings/Mybookings`, {
     headers: { Authorization: `Bearer ${token}` }
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const getAllBookingsAdmin = (token) =>
   fetch(`${API}/bookings/allbookings`, {
     headers: { Authorization: `Bearer ${token}` }
-  }).then(res => res.json());
+  }).then(handleResponse);
 
 export const updateBookingStatus = (id, status, token) =>
   fetch(`${API}/bookings/${id}/status`, {
@@ -57,4 +65,4 @@ export const updateBookingStatus = (id, status, token) =>
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({ status })
-  }).then(res => res.json());
+  }).then(handleResponse);

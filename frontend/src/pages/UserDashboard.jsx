@@ -25,7 +25,7 @@ export default function UserDashboard() {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to fetch data");
+      toast.error(err.message || "Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -38,16 +38,12 @@ export default function UserDashboard() {
   const bookService = async (serviceId) => {
     const bookingDate = new Date().toISOString();
     try {
-      const res = await createBooking({ serviceId, bookingDate }, token);
-      if(res.bookings) {
-        toast.success("Booking request sent successfully!");
-        if (activeTab === "my-bookings") fetchData();
-      } else {
-        toast.error(res.message || "Booking failed");
-      }
+      await createBooking({ serviceId, bookingDate }, token);
+      toast.success("Booking request sent successfully!");
+      if (activeTab === "my-bookings") fetchData();
     } catch (err) {
       console.error(err);
-      toast.error("Booking error. Please try again.");
+      toast.error(err.message || "Booking error. Please try again.");
     }
   };
 

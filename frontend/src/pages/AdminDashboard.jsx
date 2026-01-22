@@ -28,7 +28,7 @@ export default function AdminDashboard() {
       setBookings(res.bookings || []);
     } catch (err) {
       console.error(err);
-      toast.error("Error fetching bookings");
+      toast.error(err.message || "Error fetching bookings");
     } finally {
       setFetchLoading(false);
     }
@@ -44,17 +44,12 @@ export default function AdminDashboard() {
     if (!form.name || !form.price || !form.duration) return toast.warning("Name, price and duration are required");
     setLoading(true);
     try {
-      const res = await createService(form, token);
-      if(res.service) {
-        toast.success("Service published successfully!");
-        setForm({ name: "", description: "", price: "", duration: "" });
-      } else {
-        toast.error(res.message || "Failed to create service");
-      }
+      await createService(form, token);
+      toast.success("Service published successfully!");
+      setForm({ name: "", description: "", price: "", duration: "" });
     } catch (err) {
       console.error(err);
-      toast.error("Error creating service");
-      
+      toast.error(err.message || "Error creating service");
     } finally {
       setLoading(false);
     }
@@ -62,17 +57,12 @@ export default function AdminDashboard() {
 
   const handleStatusUpdate = async (id, status) => {
     try {
-      const res = await updateBookingStatus(id, status, token);
-      if(res.booking) {
-        toast.success(`Booking marked as ${status}`);
-        fetchBookings();
-      } else {
-        toast.error(res.message || "Update failed");
-      }
+      await updateBookingStatus(id, status, token);
+      toast.success(`Booking marked as ${status}`);
+      fetchBookings();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to update status");
-        
+      toast.error(err.message || "Update failed");
     }
   };
 
