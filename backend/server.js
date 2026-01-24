@@ -39,13 +39,20 @@ app.use((err, req, res, next) => {
     error: process.env.NODE_ENV === "production" ? {} : err.message
   });
 });
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log("Failed to connect to MongoDB", err));
+// Connect to MongoDB and then start the server
+const startServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB successfully");
 
-const PORT = process.env.PORT || 4000;
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to connect to MongoDB:", err.message);
+    process.exit(1); // Exit if DB connection fails
+  }
+};
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+startServer();
