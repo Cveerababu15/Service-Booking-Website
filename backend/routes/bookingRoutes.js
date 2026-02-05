@@ -13,7 +13,7 @@ const {
 
 // USER ROUTES
 router.post("/", authMiddleware, createbooking);
-router.get("/Mybookings", authMiddleware, getAllBookings);
+router.get("/mybookings", authMiddleware, getAllBookings);
 
 // ADMIN ROUTES
 router.get("/allbookings", authMiddleware, isAdmin, getAllBookingsAdmin);
